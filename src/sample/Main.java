@@ -16,7 +16,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         // 加载资源文件的界面配置文件
-        Parent root = FXMLLoader.load(getClass().getResource("config/sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource(Config.REC));
         // 设置标题
         primaryStage.setTitle(Config.TITLE);
         // 设置界面的大小
