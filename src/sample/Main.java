@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import sample.settings.Config;
 
@@ -14,19 +15,22 @@ import sample.settings.Config;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         // 加载资源文件的界面配置文件
         Parent root = FXMLLoader.load(getClass().getResource(Config.REC));
         // 设置标题
         primaryStage.setTitle(Config.TITLE);
         // 设置界面的大小
         primaryStage.setScene(new Scene(root, 400, 275));
-
-        primaryStage.getIcons();
+        // 设置窗口的图标(图标不识别*.ico格式)
+        primaryStage.getIcons().add(new Image(Config.ICON));
+        primaryStage.widthProperty().addListener((ov, oldValue, newValue) -> {
+                    System.out.println("Window Size Change:" + oldValue.toString() + "," + newValue.toString());
+                }
+        );
         // 显示界面
         primaryStage.show();
     }
-
 
     /**
      * The entry point of application.
