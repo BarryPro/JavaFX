@@ -24,17 +24,11 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 400, 275));
         // 设置窗口的图标(图标不识别*.ico格式)
         primaryStage.getIcons().add(new Image(Config.ICON));
-        primaryStage.widthProperty().addListener((ov, oldValue, newValue) -> {
-                    System.out.println("Window Size Change:" + oldValue.toString() + "," + newValue.toString());
-                }
-        );
         // 显示界面
         primaryStage.show();
     }
 
     /**
-     * The entry point of application.
-     *
      * @param args the input arguments
      */
     public static void main(String[] args) {
