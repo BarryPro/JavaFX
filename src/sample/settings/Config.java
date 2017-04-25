@@ -10,4 +10,5 @@ public class Config {
     public static final String REC = "view/main.fxml";
     public static final String ICON = "/sample/resources/pic/search.png";
     public static final String FILES = "/sample/resources/txt/files.txt";
+    public static final String ANNOTATION = "/sample/resources/txt/annotation.txt";
 }

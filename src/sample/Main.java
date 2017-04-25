@@ -21,7 +21,7 @@ public class Main extends Application {
         // 设置标题
         primaryStage.setTitle(Config.TITLE);
         // 设置界面的大小
-        primaryStage.setScene(new Scene(root, 400, 275));
+        primaryStage.setScene(new Scene(root, 734, 430));
         // 设置窗口的图标(图标不识别*.ico格式)
         primaryStage.getIcons().add(new Image(Config.ICON));
         // 显示界面
