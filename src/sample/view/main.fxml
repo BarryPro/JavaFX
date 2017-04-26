@@ -70,6 +70,7 @@
                         <Button fx:id="dirChooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#dirSelector" text="文件夹上传" />
                         <Button fx:id="Reset" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onResetClick" text="重置" />
                         <Button fx:id="Submit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonClick" text="提交" textAlignment="RIGHT" />
+                  <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" fx:id="contrast" />
                     </children>
                 </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">

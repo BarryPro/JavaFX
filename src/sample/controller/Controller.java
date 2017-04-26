@@ -59,6 +59,9 @@ public class Controller {
     TextField info;
 
     @FXML
+    Button contrast;
+
+    @FXML
     public void dirSelector() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("选择文件夹");
@@ -93,6 +96,15 @@ public class Controller {
     }
 
     @FXML
+    public void onClickContrast() {
+        String[] context_B = DB.getText().split("\n");
+        String[] context_A = Logger.getText().split("\n");
+        if (context_A != null && context_B != null) {
+            contrast(context_A,context_B);
+        }
+    }
+
+    @FXML
     public void onResetClick() {
         Console.setText("");
         Logger.setText("");
@@ -112,34 +124,34 @@ public class Controller {
         HashSet<String> set = (HashSet<String>) map.get("set");
         ArrayList<String> list = (ArrayList<String>) map.get("list");
         Collections.sort(list);
-        model.setText(set.size()+"");
-        Console.appendText("包含重复的表的个数："+list.size()+"\n");
-        if(list.size() == set.size()){
+        model.setText(set.size() + "");
+        Console.appendText("包含重复的表的个数：" + list.size() + "\n");
+        if (list.size() == set.size()) {
             Console.appendText("模型中没有重复的表！\n");
         }
         Console.appendText("检测数据库中的表是否在模型中\n");
         Console.appendText("========================================================\n");
         // 把读取回来的信息转化装换成字符串数组
         String[] context = DB.getText().split("\n");
-        table.setText(context.length+"");
+        table.setText(context.length + "");
         Set<String> set_tmp = dbLoggerndModelCmp(context, set);
         Console.appendText("检查模型中有而数据库中没有的表\n");
         Console.appendText("========================================================\n");
         Set<String> set_Ann = readAnnotation();
-        annotation.setText(set_Ann.size()+"");
+        annotation.setText(set_Ann.size() + "");
         for (String i : list) {
             if (!set_tmp.contains(i.trim())) {
-                if(!set_Ann.contains(i.trim())&&!set.contains(i.trim())){
+                if (!set_Ann.contains(i.trim()) && set.contains(i.trim())) {
                     Console.appendText(i + "\n");
                 }
             }
         }
-        annotationMattern(set.size(),context.length,set_Ann.size());
+        annotationMattern(set.size(), context.length, set_Ann.size());
         Console.appendText("========================================================\n");
         Console.appendText("注释的表有：\n");
         Console.appendText("========================================================\n");
-        for(String i:set_Ann){
-            Console.appendText(i+"\n");
+        for (String i : set_Ann) {
+            Console.appendText(i + "\n");
         }
         Console.appendText("========================================================\n");
         Console.appendText("模型中的属组名包括：" + username + "\n");
@@ -165,6 +177,7 @@ public class Controller {
         HashSet<String> set = new HashSet<>();
         ArrayList<String> list = new ArrayList<>();
         HashMap<String, Object> map = new HashMap<>();
+        username.clear();
         for (File i : files) {
             if (model_set.contains(i.getName())) {
                 String file_path = root + File.separator + i.getName().toString();
@@ -207,6 +220,7 @@ public class Controller {
 
     /**
      * 模型的目录文件名列表，要进行比较的模型文件
+     *
      * @param dirPath
      * @return
      */
@@ -249,7 +263,7 @@ public class Controller {
             for (String i : list) {
                 if (!set.contains(i)) {
                     count++;
-                    Console.appendText(i+"\n");
+                    Console.appendText(i + "\n");
                 }
             }
             Console.appendText("========================================================\n");
@@ -263,9 +277,10 @@ public class Controller {
 
     /**
      * 用于读取注释掉的表名
+     *
      * @return
      */
-    private Set<String> readAnnotation(){
+    private Set<String> readAnnotation() {
         Set<String> set = new HashSet<>();
         InputStream inputStream = Controller.class.getResourceAsStream(Config.ANNOTATION);
         try {
@@ -284,11 +299,51 @@ public class Controller {
     /**
      * 用于测试表模型与数据库的表的数量比对
      */
-    private void annotationMattern(int model,int table,int annotation){
-        if(model-annotation == table){
-            info.setText("数据库中的表的数量正常："+table+"个");
+    private void annotationMattern(int model, int table, int annotation) {
+        if (model - annotation - username.get("DBBILLPRG") == table) {
+            info.setText("数据库中的表的数量正常：" + table + "个");
         } else {
             info.setText("数据库中的表的数量不正常，请看日志");
         }
     }
+
+    /**
+     * 实现A库与B库的对比
+     */
+    private void contrast(String[] A, String[] B) {
+        HashSet<String> set = new HashSet<>();
+        for (String i : A) {
+            set.add(i);
+        }
+        for (String i : B) {
+            if (set.contains(i)) {
+                set.remove(i);
+            }
+        }
+        Console.appendText("B中有的表而A中没有的表：\n");
+        Console.appendText("========================================================\n");
+        for (String i : set) {
+            Console.appendText(i+"\n");
+        }
+        Console.appendText("========================================================\n");
+        Console.appendText("一共缺少" + set.size() + "个表\n");
+        Console.appendText("========================================================\n");
+        set.clear();
+        for (String i : B) {
+            set.add(i);
+        }
+        for (String i : A) {
+            if (set.contains(i)) {
+                set.remove(i);
+            }
+        }
+        Console.appendText("A中有的表而B中没有的表：\n");
+        Console.appendText("========================================================\n");
+        for (String i : set) {
+            Console.appendText(i+"\n");
+        }
+        Console.appendText("========================================================\n");
+        Console.appendText("一共缺少" + set.size() + "个表\n");
+    }
+
 }
