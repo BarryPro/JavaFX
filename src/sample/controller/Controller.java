@@ -2,6 +2,7 @@ package sample.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -62,6 +63,12 @@ public class Controller {
     Button contrast;
 
     @FXML
+    MenuItem search;
+
+    /**
+     * 设置选择的文件夹
+     */
+    @FXML
     public void dirSelector() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("选择文件夹");
@@ -71,6 +78,9 @@ public class Controller {
         }
     }
 
+    /**
+     * 设置选择的文件
+     */
     @FXML
     public void fileSelector() {
         FileChooser fileChooser = new FileChooser();

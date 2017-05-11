@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.Controller">
     <content>
         <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="719.0">
@@ -32,9 +21,9 @@
             <RowConstraints />
             </rowConstraints>
             <children>
-                <TextArea fx:id="Logger" GridPane.rowIndex="3" />
-                <TextArea fx:id="DB" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <TextArea fx:id="Console" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                <TextArea fx:id="Logger" promptText="Logger:显示模型都在哪些文件下或者对比：A库表的列表" GridPane.rowIndex="3" />
+                <TextArea fx:id="DB" promptText="DB：用于数据A库或B库的数据库表或对比：B库的表的列表" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextArea fx:id="Console" promptText="Console：控制台的日志和结果输出" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                 <MenuBar maxHeight="1.7976931348623157E308" prefHeight="15.0" prefWidth="863.0" GridPane.columnSpan="2">
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
@@ -47,9 +36,9 @@
                                 <MenuItem mnemonicParsing="false" text="Delete" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
+                        <Menu mnemonicParsing="false" text="Pattern">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="About" />
+                                <MenuItem fx:id="search" mnemonicParsing="false" text="搜索" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="tools">
@@ -70,7 +59,7 @@
                         <Button fx:id="dirChooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#dirSelector" text="文件夹上传" />
                         <Button fx:id="Reset" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onResetClick" text="重置" />
                         <Button fx:id="Submit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonClick" text="提交" textAlignment="RIGHT" />
-                  <Button maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" fx:id="contrast" />
+                  <Button fx:id="contrast" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" />
                     </children>
                 </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
