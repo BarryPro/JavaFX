@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sample.dao.InCbtableSyncRelationDaoImpl;
 import sample.settings.Config;
 
 import java.io.*;
@@ -18,11 +19,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Controller {
+public class ModelController {
     // 文件的绝对路径
     private String filePath;
     // 文件夹的局对路径
     private String dirPath;
+
+    private static InCbtableSyncRelationDaoImpl dao = new InCbtableSyncRelationDaoImpl();
 
     @FXML
     Button Submit;
@@ -65,6 +68,9 @@ public class Controller {
     @FXML
     MenuItem search;
 
+    @FXML
+    Button sync;
+
     /**
      * 设置选择的文件夹
      */
@@ -92,6 +98,30 @@ public class Controller {
     }
 
     /**
+     * 处理工单同步配置表的配置
+     */
+    @FXML
+    public void onClickSync() {
+        String[] tables = null;
+        String[] context_B = DB.getText().split("\\s");
+        String[] context_A = Logger.getText().split("\\s");
+        // 默认取第一个框的表名
+        if (context_A != null) {
+            tables = context_A;
+        } else {
+            tables = context_B;
+        }
+        long start = System.currentTimeMillis();
+        Console.appendText("开始执行工单同步配置\n");
+        Console.appendText("一共需要配置"+tables.length+"张表\n");
+        for (String table : tables) {
+            orderSyncRelation(table);
+        }
+        long end = System.currentTimeMillis();
+        Console.appendText("一共配置"+tables.length+"个表,用时："+((end-start)/1000)+"秒\n");
+    }
+
+    /**
      * 点击提交按钮进行调用相应的程序进行处理
      */
     @FXML
@@ -107,10 +137,10 @@ public class Controller {
 
     @FXML
     public void onClickContrast() {
-        String[] context_B = DB.getText().split("\n");
-        String[] context_A = Logger.getText().split("\n");
+        String[] context_B = DB.getText().split("\\s");
+        String[] context_A = Logger.getText().split("\\s");
         if (context_A != null && context_B != null) {
-            contrast(context_A,context_B);
+            contrast(context_A, context_B);
         }
     }
 
@@ -236,7 +266,7 @@ public class Controller {
      */
     private Set getModelFiles(String dirPath) {
         HashSet<String> set = new HashSet<>();
-        InputStream inputStream = Controller.class.getResourceAsStream(Config.FILES);
+        InputStream inputStream = ModelController.class.getResourceAsStream(Config.FILES);
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String buffer = null;
@@ -292,7 +322,7 @@ public class Controller {
      */
     private Set<String> readAnnotation() {
         Set<String> set = new HashSet<>();
-        InputStream inputStream = Controller.class.getResourceAsStream(Config.ANNOTATION);
+        InputStream inputStream = ModelController.class.getResourceAsStream(Config.ANNOTATION);
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String buffer = null;
@@ -323,37 +353,55 @@ public class Controller {
     private void contrast(String[] A, String[] B) {
         HashSet<String> set = new HashSet<>();
         for (String i : A) {
-            set.add(i);
+            set.add(i.toUpperCase());
         }
         for (String i : B) {
-            if (set.contains(i)) {
-                set.remove(i);
+            if (set.contains(i.toUpperCase())) {
+                set.remove(i.toUpperCase());
             }
         }
-        Console.appendText("B中有的表而A中没有的表：\n");
+        Console.appendText("A中有的表而B中没有的表：\n");
         Console.appendText("========================================================\n");
         for (String i : set) {
-            Console.appendText(i+"\n");
+            Console.appendText(i + "\n");
         }
         Console.appendText("========================================================\n");
         Console.appendText("一共缺少" + set.size() + "个表\n");
         Console.appendText("========================================================\n");
         set.clear();
         for (String i : B) {
-            set.add(i);
+            set.add(i.toUpperCase());
         }
         for (String i : A) {
-            if (set.contains(i)) {
-                set.remove(i);
+            if (set.contains(i.toUpperCase())) {
+                set.remove(i.toUpperCase());
             }
         }
-        Console.appendText("A中有的表而B中没有的表：\n");
+        Console.appendText("B中有的表而A中没有的表：\n");
         Console.appendText("========================================================\n");
         for (String i : set) {
-            Console.appendText(i+"\n");
+            Console.appendText(i + "\n");
         }
         Console.appendText("========================================================\n");
         Console.appendText("一共缺少" + set.size() + "个表\n");
+    }
+
+    /**
+     * 数据工单的同步表配置具体实现
+     */
+    public void orderSyncRelation(String tableName){
+        Console.appendText(dao.insert(tableName)+"\n");
+        Map<String, List<String>> map = dao.selectIndexFlag(tableName);
+        Object object = map.get("indexFlag");
+        List<String> list = (List<String>) object;
+        object = map.get("message");
+        Console.appendText(object +"\n");
+        Console.appendText("list:"+list+"\n");
+        if (!list.isEmpty()) {
+            for (String columnName:list) {
+                Console.appendText(dao.updateIndexFlag(tableName,columnName)+"\n");
+            }
+        }
     }
 
 }

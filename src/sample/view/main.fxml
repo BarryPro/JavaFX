@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.Controller">
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.ModelController">
     <content>
         <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="430.0" prefWidth="719.0">
             <columnConstraints>
@@ -60,6 +60,7 @@
                         <Button fx:id="Reset" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onResetClick" text="重置" />
                         <Button fx:id="Submit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonClick" text="提交" textAlignment="RIGHT" />
                   <Button fx:id="contrast" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" />
+                  <Button fx:id="sync" mnemonicParsing="false" onAction="#onClickSync" text="同步配置" />
                     </children>
                 </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
