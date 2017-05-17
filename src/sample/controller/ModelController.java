@@ -25,7 +25,7 @@ public class ModelController {
     // 文件夹的局对路径
     private String dirPath;
 
-    private static InCbtableSyncRelationDaoImpl dao = new InCbtableSyncRelationDaoImpl();
+    private InCbtableSyncRelationDaoImpl dao = new InCbtableSyncRelationDaoImpl();
 
     @FXML
     Button Submit;

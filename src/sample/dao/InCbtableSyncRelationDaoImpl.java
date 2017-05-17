@@ -23,7 +23,7 @@ public class InCbtableSyncRelationDaoImpl {
      * 用于连接Oracle数据库
      */
     public InCbtableSyncRelationDaoImpl() {
-        connection = OracleConn.getConnection();
+        connection = new OracleConn().getConnection();
     }
 
     /**
