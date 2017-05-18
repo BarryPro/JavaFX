@@ -29,6 +29,8 @@ public class ModelController {
 
     private static String pattern;
 
+    private static String opname;
+
     @FXML
     Button Submit;
 
@@ -119,12 +121,12 @@ public class ModelController {
         }
         long start = System.currentTimeMillis();
         Console.appendText("开始执行工单同步配置\n");
-        Console.appendText("一共需要配置"+tables.length+"张表\n");
+        Console.appendText("一共需要配置" + tables.length + "张"+opname+"\n");
         for (String table : tables) {
             orderSyncRelation(table.toUpperCase());
         }
         long end = System.currentTimeMillis();
-        Console.appendText("一共配置"+tables.length+"个表,用时："+((end-start)/1000)+"秒\n");
+        Console.appendText("一共配置" + tables.length + "个"+opname+",用时：" + ((end - start) / 1000) + "秒\n");
     }
 
     /**
@@ -137,7 +139,7 @@ public class ModelController {
         if (!DB.getText().isEmpty()) {
             main();
         } else {
-            Console.setText("请填加数据库表列表或文件");
+            Console.setText("请填加数据库"+opname+"列"+opname+"或文件");
         }
     }
 
@@ -162,35 +164,40 @@ public class ModelController {
     }
 
     @FXML
-    public void tableAction(){
+    public void tableAction() {
         pattern = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+        opname = "表";
     }
 
     @FXML
-    public void indexAction(){
-        pattern = "CREATE(.*)INDEX .*\\.(.*).*ON";
+    public void indexAction() {
+        pattern = "CREATE(.*)INDEX (.*)\\.(.*) ON.*";
+        opname = "索引";
     }
 
     public HashMap<String, Integer> username = new HashMap<>();
 
     public void main() {
+        if (opname == null) {
+            opname = "表";
+        }
         HashMap<String, Object> map = ModelTableNum();
         URL url = null;
         HashSet<String> set = (HashSet<String>) map.get("set");
         ArrayList<String> list = (ArrayList<String>) map.get("list");
         Collections.sort(list);
         model.setText(set.size() + "");
-        Console.appendText("包含重复的表的个数：" + list.size() + "\n");
+        Console.appendText("包含重复的"+opname+"的个数：" + list.size() + "\n");
         if (list.size() == set.size()) {
-            Console.appendText("模型中没有重复的表！\n");
+            Console.appendText("模型中没有重复的"+opname+"！\n");
         }
-        Console.appendText("检测数据库中的表是否在模型中\n");
+        Console.appendText("检测数据库中的"+opname+"是否在模型中\n");
         Console.appendText("========================================================\n");
         // 把读取回来的信息转化装换成字符串数组
         String[] context = DB.getText().split("\n");
         table.setText(context.length + "");
         Set<String> set_tmp = dbLoggerndModelCmp(context, set);
-        Console.appendText("检查模型中有而数据库中没有的表\n");
+        Console.appendText("检查模型中有而数据库中没有的"+opname+"\n");
         Console.appendText("========================================================\n");
         Set<String> set_Ann = readAnnotation();
         annotation.setText(set_Ann.size() + "");
@@ -203,7 +210,7 @@ public class ModelController {
         }
         annotationMattern(set.size(), context.length, set_Ann.size());
         Console.appendText("========================================================\n");
-        Console.appendText("注释的表有：\n");
+        Console.appendText("注释的"+opname+"有：\n");
         Console.appendText("========================================================\n");
         for (String i : set_Ann) {
             Console.appendText(i + "\n");
@@ -244,7 +251,7 @@ public class ModelController {
                     int count = 0;
                     while ((context = br.readLine()) != null) {
                         String regex = pattern;
-                        if(regex == null){
+                        if (regex == null) {
                             regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
                         }
                         Pattern pattern = Pattern.compile(regex);
@@ -260,7 +267,7 @@ public class ModelController {
                                 username.put(user, 1);
                             }
                             String tmp_str = matcher.group(3);
-                            if(tmp_str!=null){
+                            if (tmp_str != null) {
                                 //Console.appendText(tmp_str);
                                 set.add(tmp_str.trim());
                                 list.add(tmp_str.trim());
@@ -268,7 +275,7 @@ public class ModelController {
 
                         }
                     }
-                    Logger.appendText(i.getName() + "的表数量是" + count + "\n");
+                    Logger.appendText(i.getName() + "的"+opname+"数量是" + count + "\n");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -278,6 +285,7 @@ public class ModelController {
         map.put("list", list);
         return map;
     }
+
 
     /**
      * 模型的目录文件名列表，要进行比较的模型文件
@@ -311,7 +319,7 @@ public class ModelController {
         HashSet<String> set_tmp = new HashSet<>();
         try {
             if (db_file.length == 0) {
-                Console.appendText("请添加数据库的表表名");
+                Console.appendText("请添加数据库的"+opname+opname+"名");
             }
             for (String buffer : db_file) {
                 list.add(buffer.trim().toUpperCase());
@@ -319,7 +327,7 @@ public class ModelController {
             }
             int count = 0;
             Console.appendText("========================================================\n");
-            Console.appendText("DB库中有但是模型中没有的表是：\n");
+            Console.appendText("DB库中有但是模型中没有的"+opname+"是：\n");
             Console.appendText("========================================================\n");
             for (String i : list) {
                 if (!set.contains(i)) {
@@ -328,7 +336,7 @@ public class ModelController {
                 }
             }
             Console.appendText("========================================================\n");
-            Console.appendText("一共有" + count + "个表不存在\n");
+            Console.appendText("一共有" + count + "个"+opname+"不存在\n");
             Console.appendText("========================================================\n");
         } catch (Exception e) {
             e.printStackTrace();
@@ -361,11 +369,11 @@ public class ModelController {
      * 用于测试表模型与数据库的表的数量比对
      */
     private void annotationMattern(int model, int table, int annotation) {
-        if(username!=null){
+        if (username != null) {
             if (model - annotation - username.get("DBBILLPRG") == table) {
-                info.setText("数据库中的表的数量正常：" + table + "个");
+                info.setText("数据库中的"+opname+"的数量正常：" + table + "个");
             } else {
-                info.setText("数据库中的表的数量不正常，请看日志");
+                info.setText("数据库中的"+opname+"的数量不正常，请看日志");
             }
         }
     }
@@ -383,13 +391,13 @@ public class ModelController {
                 set.remove(i.toUpperCase());
             }
         }
-        Console.appendText("A中有的表而B中没有的表：\n");
+        Console.appendText("A中有的"+opname+"而B中没有的"+opname+"：\n");
         Console.appendText("========================================================\n");
         for (String i : set) {
             Console.appendText(i + "\n");
         }
         Console.appendText("========================================================\n");
-        Console.appendText("一共缺少" + set.size() + "个表\n");
+        Console.appendText("一共缺少" + set.size() + "个"+opname+"\n");
         Console.appendText("========================================================\n");
         set.clear();
         for (String i : B) {
@@ -400,29 +408,29 @@ public class ModelController {
                 set.remove(i.toUpperCase());
             }
         }
-        Console.appendText("B中有的表而A中没有的表：\n");
+        Console.appendText("B中有的"+opname+"而A中没有的"+opname+"：\n");
         Console.appendText("========================================================\n");
         for (String i : set) {
             Console.appendText(i + "\n");
         }
         Console.appendText("========================================================\n");
-        Console.appendText("一共缺少" + set.size() + "个表\n");
+        Console.appendText("一共缺少" + set.size() + "个"+opname+"\n");
     }
 
     /**
      * 数据工单的同步表配置具体实现
      */
-    public void orderSyncRelation(String tableName){
-        Console.appendText(dao.insert(tableName)+"\n");
+    public void orderSyncRelation(String tableName) {
+        Console.appendText(dao.insert(tableName) + "\n");
         Map<String, List<String>> map = dao.selectIndexFlag(tableName);
         Object object = map.get("indexFlag");
         List<String> list = (List<String>) object;
         object = map.get("message");
-        Console.appendText(object +"\n");
-        Console.appendText("list:"+list+"\n");
+        Console.appendText(object + "\n");
+        Console.appendText("list:" + list + "\n");
         if (!list.isEmpty()) {
-            for (String columnName:list) {
-                Console.appendText(dao.updateIndexFlag(tableName,columnName)+"\n");
+            for (String columnName : list) {
+                Console.appendText(dao.updateIndexFlag(tableName, columnName) + "\n");
             }
         }
     }
