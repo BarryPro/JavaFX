@@ -17,8 +17,8 @@
                 <RowConstraints maxHeight="250.0" minHeight="-Infinity" prefHeight="23.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="48.0" prefHeight="168.0" valignment="CENTER" vgrow="ALWAYS" />
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="21.0" prefHeight="24.0" valignment="CENTER" vgrow="ALWAYS" />
-            <RowConstraints />
-            <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
             </rowConstraints>
             <children>
                 <TextArea fx:id="Logger" promptText="Logger:显示模型都在哪些文件下或者对比：A库表的列表" GridPane.rowIndex="3" />
@@ -38,7 +38,8 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Pattern">
                             <items>
-                                <MenuItem fx:id="search" mnemonicParsing="false" text="搜索" />
+                                <MenuItem fx:id="search_table" mnemonicParsing="false" onAction="#tableAction" text="table" />
+                                <MenuItem fx:id="search_index" mnemonicParsing="false" onAction="#indexAction" text="index" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="tools">
@@ -59,34 +60,34 @@
                         <Button fx:id="dirChooser" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#dirSelector" text="文件夹上传" />
                         <Button fx:id="Reset" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onResetClick" text="重置" />
                         <Button fx:id="Submit" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonClick" text="提交" textAlignment="RIGHT" />
-                  <Button fx:id="contrast" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" />
-                  <Button fx:id="sync" mnemonicParsing="false" onAction="#onClickSync" text="同步配置" />
+                        <Button fx:id="contrast" maxHeight="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickContrast" text="对比" />
+                        <Button fx:id="sync" mnemonicParsing="false" onAction="#onClickSync" text="同步配置" />
                     </children>
                 </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
-               <children>
-                  <Label maxHeight="1.7976931348623157E308" text="Model NUM:" />
-                  <TextField fx:id="model" maxHeight="1.7976931348623157E308" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <children>
-                  <Label maxHeight="1.7976931348623157E308" text="Table NUM:" />
-                  <TextField fx:id="table" maxHeight="1.7976931348623157E308" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="6">
-               <children>
-                  <Label maxHeight="1.7976931348623157E308" text="Annotation NUM：" />
-                  <TextField fx:id="annotation" maxHeight="1.7976931348623157E308" />
-               </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-               <children>
-                  <Label maxHeight="1.7976931348623157E308" text="INFO：" />
-                  <TextField fx:id="info" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="320.0" />
-               </children>
-            </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="4">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" text="Model NUM:" />
+                        <TextField fx:id="model" maxHeight="1.7976931348623157E308" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" text="Table NUM:" />
+                        <TextField fx:id="table" maxHeight="1.7976931348623157E308" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="6">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" text="Annotation NUM：" />
+                        <TextField fx:id="annotation" maxHeight="1.7976931348623157E308" />
+                    </children>
+                </HBox>
+                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                    <children>
+                        <Label maxHeight="1.7976931348623157E308" text="INFO：" />
+                        <TextField fx:id="info" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="24.0" prefWidth="320.0" />
+                    </children>
+                </HBox>
             </children>
         </GridPane>
     </content>

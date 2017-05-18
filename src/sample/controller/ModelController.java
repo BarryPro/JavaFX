@@ -25,7 +25,9 @@ public class ModelController {
     // 文件夹的局对路径
     private String dirPath;
 
-    private InCbtableSyncRelationDaoImpl dao = new InCbtableSyncRelationDaoImpl();
+    private InCbtableSyncRelationDaoImpl dao;
+
+    private static String pattern;
 
     @FXML
     Button Submit;
@@ -66,7 +68,10 @@ public class ModelController {
     Button contrast;
 
     @FXML
-    MenuItem search;
+    MenuItem search_table;
+
+    @FXML
+    MenuItem search_index;
 
     @FXML
     Button sync;
@@ -102,6 +107,7 @@ public class ModelController {
      */
     @FXML
     public void onClickSync() {
+        dao = new InCbtableSyncRelationDaoImpl();
         String[] tables = null;
         String[] context_B = DB.getText().split("\\s");
         String[] context_A = Logger.getText().split("\\s");
@@ -115,7 +121,7 @@ public class ModelController {
         Console.appendText("开始执行工单同步配置\n");
         Console.appendText("一共需要配置"+tables.length+"张表\n");
         for (String table : tables) {
-            orderSyncRelation(table);
+            orderSyncRelation(table.toUpperCase());
         }
         long end = System.currentTimeMillis();
         Console.appendText("一共配置"+tables.length+"个表,用时："+((end-start)/1000)+"秒\n");
@@ -155,6 +161,15 @@ public class ModelController {
         annotation.setText("");
     }
 
+    @FXML
+    public void tableAction(){
+        pattern = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+    }
+
+    @FXML
+    public void indexAction(){
+        pattern = "CREATE(.*)INDEX .*\\.(.*).*ON";
+    }
 
     public HashMap<String, Integer> username = new HashMap<>();
 
@@ -228,7 +243,10 @@ public class ModelController {
                     // 循环遍历tmp下的*.sql文件内容
                     int count = 0;
                     while ((context = br.readLine()) != null) {
-                        String regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+                        String regex = pattern;
+                        if(regex == null){
+                            regex = "CREATE(.*)TABLE (.*)\\.(.*)[(|\n|  (| (]*";
+                        }
                         Pattern pattern = Pattern.compile(regex);
                         Matcher matcher = pattern.matcher(context.toUpperCase());
                         if (matcher.find()) {
@@ -242,9 +260,12 @@ public class ModelController {
                                 username.put(user, 1);
                             }
                             String tmp_str = matcher.group(3);
-                            //Console.appendText(tmp_str);
-                            set.add(tmp_str.trim());
-                            list.add(tmp_str.trim());
+                            if(tmp_str!=null){
+                                //Console.appendText(tmp_str);
+                                set.add(tmp_str.trim());
+                                list.add(tmp_str.trim());
+                            }
+
                         }
                     }
                     Logger.appendText(i.getName() + "的表数量是" + count + "\n");
@@ -293,8 +314,8 @@ public class ModelController {
                 Console.appendText("请添加数据库的表表名");
             }
             for (String buffer : db_file) {
-                list.add(buffer.trim());
-                set_tmp.add(buffer.trim());
+                list.add(buffer.trim().toUpperCase());
+                set_tmp.add(buffer.trim().toUpperCase());
             }
             int count = 0;
             Console.appendText("========================================================\n");
@@ -340,10 +361,12 @@ public class ModelController {
      * 用于测试表模型与数据库的表的数量比对
      */
     private void annotationMattern(int model, int table, int annotation) {
-        if (model - annotation - username.get("DBBILLPRG") == table) {
-            info.setText("数据库中的表的数量正常：" + table + "个");
-        } else {
-            info.setText("数据库中的表的数量不正常，请看日志");
+        if(username!=null){
+            if (model - annotation - username.get("DBBILLPRG") == table) {
+                info.setText("数据库中的表的数量正常：" + table + "个");
+            } else {
+                info.setText("数据库中的表的数量不正常，请看日志");
+            }
         }
     }
 
